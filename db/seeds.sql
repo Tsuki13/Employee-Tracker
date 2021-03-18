@@ -11,7 +11,7 @@ VALUES ("General Manager", 140000, 1),
     ("Software Engineer", 75000, 2),
     ("Sr Software Engineer", 90000, 2),
     ("Test Engineer", 50000, 3),
-    ("Lead test Engineer", 65000, 3)
+    ("Lead test Engineer", 65000, 3);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ("Joe", "Boss", 1, NULL),
