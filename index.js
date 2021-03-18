@@ -5,8 +5,9 @@ const menuOptions = () => {
     inquirer
         .prompt([
             {
-                name: "options",
                 type: 'list',
+                name: "options",
+                message: "What would you like to do?",
                 choices: ["Add Employees", "Add Roles", "Add Departments", "View Employees", "View Roles", "View Departments", "Update Employee Role", "Exit"]
             }
         ])
