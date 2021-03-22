@@ -26,6 +26,10 @@ const menuOptions = () => {
                     viewDepartments();
                     break;
 
+                case 'Add Employees':
+                    addEmployees();
+                    break;
+
                 case 'Exit':
                     exitSession();
                     break;
@@ -34,7 +38,7 @@ const menuOptions = () => {
 }
 
 function viewEmployees() {
-    const query = `SELECT employee.first_name, employee.last_name, employee.role_id, employee.manager_id, role.salary, role.title, department_id
+    const query = `SELECT employee.id, employee.first_name, employee.last_name, employee.role_id, employee.manager_id, role.salary, role.title, employee.department_id
     FROM employee 
     INNER JOIN role 
     ON employee.role_id = role.id`;
@@ -68,6 +72,86 @@ function viewDepartments() {
         console.table(res);
         menuOptions();
     })
+}
+
+function addEmployees() {
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                name: "firstname",
+                message: "What is the new team members first name?"
+            },
+            {
+                type: "input",
+                name: "lastname",
+                message: "What is the new team members last name?"
+            },
+            {
+                type: "input",
+                name: "id",
+                message: "Enter employees ID number"
+            },
+            {
+                type: "list",
+                name: "newrole",
+                message: "Choose new team members role",
+                choices: ["Intern Software Developer", "Jr Software Developer", "Software Engineer", "Sr Software Engineer", "Test Engineer", "Lead test Engineer"]
+            },
+            {
+                type: "list",
+                name: "managerID",
+                message: "Choose new team members manager",
+                choices: ["Joe Boss", "Proj Man"]
+            },
+            {
+                type: "list",
+                name: "deptID",
+                message: "Choose new team members department",
+                choices: ["Engineering", "Quality Assurance"]
+            },
+
+        ]).then(answer => {
+            console.log(answer)
+
+            if (answer.managerID === "Proj Man") {
+                manager_id = 2
+            } else { manager_id = 1 }
+
+            if (answer.newrole === "Intern Software Developer") {
+                role_id = 3
+            } else if (answer.newrole === "Jr Software Developer") {
+                role_id = 4
+            } else if (answer.newrole === "Software Engineer") {
+                role_id = 5
+            } else if (answer.newrole === "Sr Software Engineer") {
+                role_id = 6
+            } else if (answer.newrole === "Test Engineer") {
+                role_id = 7
+            } else if (answer.newrole === "Lead test Engineer") {
+                role_id = 8
+            }
+
+            if (answer.deptID === "Engineering") {
+                department_id = 2
+            } else { department_id = 3 }
+
+            let values = {
+                id: answer.id,
+                first_name: answer.firstname,
+                last_name: answer.lastname,
+                role_id,
+                manager_id,
+                department_id
+            }
+            connection.query("INSERT INTO employee SET ?",
+                values,
+                function (err, res) {
+                    if (err) throw err;
+                    console.table(values);
+                    menuOptions();
+                })
+        })
 }
 
 function exitSession() {
