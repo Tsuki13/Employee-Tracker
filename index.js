@@ -30,6 +30,18 @@ const menuOptions = () => {
                     addEmployees();
                     break;
 
+                case 'Add Departments':
+                    addDept();
+                    break;
+
+                case 'Add Roles':
+                    addRoles();
+                    break;
+
+                case 'Update Employee Role':
+                    updateRole();
+                    break;
+
                 case 'Exit':
                     exitSession();
                     break;
@@ -44,6 +56,8 @@ function viewEmployees() {
     ON employee.role_id = role.id`;
     connection.query(query, (err, res) => {
         if (err) throw err;
+        //added \n to make table readable
+        console.log('\n')
         console.table(res);
         menuOptions();
     })
@@ -57,6 +71,7 @@ function viewRoles() {
     ORDER BY role.id`;
     connection.query(query, (err, res) => {
         if (err) throw err;
+        console.log('\n')
         console.table(res);
         menuOptions();
     })
@@ -69,6 +84,7 @@ function viewDepartments() {
     ON employee.department_id = department.id`;
     connection.query(query, (err, res) => {
         if (err) throw err;
+        console.log('\n')
         console.table(res);
         menuOptions();
     })
@@ -152,6 +168,132 @@ function addEmployees() {
                     menuOptions();
                 })
         })
+}
+
+function addDept() {
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                name: "newDept",
+                message: "Enter new Department name"
+            },
+            {
+                type: "input",
+                name: "newDeptID",
+                message: "Enter new Department ID number"
+            }
+        ]).then(answer => {
+            console.log(answer)
+            connection.query("INSERT INTO department SET ?",
+                {
+                    name: answer.newDept,
+                    id: answer.newDeptId,
+                },
+                function (err, res) {
+                    if (err) throw err;
+                    console.table(department);
+                    menuOptions();
+                })
+        })
+}
+
+function addRoles() {
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                name: "newRoleID",
+                message: "What's the new roles ID number?"
+            },
+            {
+                type: "input",
+                name: "newTitle",
+                message: "What's the new roles title?"
+            },
+            {
+                type: "input",
+                name: "newSalary",
+                message: "What's the new roles salary?"
+            },
+            {
+                type: "input",
+                name: "deptID",
+                message: "What's the new roles departmentID?"
+            },
+
+        ]).then(answer => {
+            console.log(answer)
+            connection.query("INSERT INTO role SET ?",
+                {
+                    title: answer.newTitle,
+                    id: answer.newRoleID,
+                    salary: answer.newSalary,
+                    department_id: answer.deptID
+                },
+                function (err, res) {
+                    if (err) throw err;
+                    console.table(role);
+                    menuOptions();
+                })
+        })
+}
+
+async function updateRole() {
+    try {
+        const empID = await inquirer
+            .prompt([
+                {
+                    type: "input",
+                    name: "name",
+                    message: "What is the employee's ID number?"
+                }
+            ]);
+        connection.query('SELECT role.id, role.title, department_id FROM role', async (err, res) => {
+            if (err) throw err;
+            const { role } = await inquirer.prompt([
+                {
+                    name: 'role',
+                    type: 'list',
+                    choices: () => res.map(res => res.title),
+                    message: 'What is the new employees role?: '
+                }
+            ]);
+
+            if (res.title === 'General Manager' || 'Project Manager') {
+                connection.query(`UPDATE employee
+              SET department_id = 1
+              WHERE employee.id = ${empID.name}`, async (err, res) => {
+                    if (err) throw err;
+                    menuOptions();
+                });
+            } else if (res.title === 'Intern Software Developer' || 'Jr Software Developer' || 'Software Engineer' || 'Sr Software Engineer') {
+                connection.query(`UPDATE employee
+              SET department_id = 2
+              WHERE employee.id = ${empID.name}`, async (err, res) => {
+                    if (err) throw err;
+                    menuOptions();
+                });
+            }
+
+            let roleId;
+            for (const selected of res) {
+                if (selected.title === role) {
+                    roleId = selected.id;
+                    continue;
+                }
+            }
+
+            connection.query(`UPDATE employee 
+            SET role_id = ${roleId} 
+            WHERE employee.id = ${empID.name}`, async (err, res) => {
+                if (err) throw err;
+                menuOptions();
+            });
+        })
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 function exitSession() {
