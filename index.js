@@ -2,8 +2,8 @@ const inquirer = require("inquirer");
 require("console.table");
 const connection = require("./config/connection");
 
-const menuOptions = () => {
-    inquirer
+const menuOptions = async () => {
+    await inquirer
         .prompt([
             {
                 type: 'list',
@@ -90,8 +90,8 @@ function viewDepartments() {
     })
 }
 
-function addEmployees() {
-    inquirer
+async function addEmployees() {
+    await inquirer
         .prompt([
             {
                 type: "input",
@@ -102,11 +102,6 @@ function addEmployees() {
                 type: "input",
                 name: "lastname",
                 message: "What is the new team members last name?"
-            },
-            {
-                type: "input",
-                name: "id",
-                message: "Enter employees ID number"
             },
             {
                 type: "list",
@@ -153,7 +148,7 @@ function addEmployees() {
             } else { department_id = 3 }
 
             let values = {
-                id: answer.id,
+                // id: answer.id,
                 first_name: answer.firstname,
                 last_name: answer.lastname,
                 role_id,
@@ -170,29 +165,23 @@ function addEmployees() {
         })
 }
 
-function addDept() {
-    inquirer
+async function addDept() {
+    await inquirer
         .prompt([
             {
                 type: "input",
                 name: "newDept",
-                message: "Enter new Department name"
+                message: "Enter new department name"
             },
-            {
-                type: "input",
-                name: "newDeptID",
-                message: "Enter new Department ID number"
-            }
+
         ]).then(answer => {
             console.log(answer)
-            connection.query("INSERT INTO department SET ?",
+            connection.query(`INSERT INTO department SET ?`,
                 {
                     name: answer.newDept,
-                    id: answer.newDeptId,
                 },
                 function (err, res) {
                     if (err) throw err;
-                    console.table(department);
                     menuOptions();
                 })
         })
@@ -201,11 +190,6 @@ function addDept() {
 function addRoles() {
     inquirer
         .prompt([
-            {
-                type: "input",
-                name: "newRoleID",
-                message: "What's the new roles ID number?"
-            },
             {
                 type: "input",
                 name: "newTitle",
@@ -227,13 +211,11 @@ function addRoles() {
             connection.query("INSERT INTO role SET ?",
                 {
                     title: answer.newTitle,
-                    id: answer.newRoleID,
                     salary: answer.newSalary,
                     department_id: answer.deptID
                 },
                 function (err, res) {
                     if (err) throw err;
-                    console.table(role);
                     menuOptions();
                 })
         })
@@ -259,17 +241,15 @@ async function updateRole() {
                     message: 'What is the new employees role?: '
                 }
             ]);
-
-            if (res.title === 'General Manager' || 'Project Manager') {
+            let deptID;
+            for (const selected of res) {
+                if (selected.title === role) {
+                    deptID = selected.department_id
+                }
+            }
+            if (res.title === role.name) {
                 connection.query(`UPDATE employee
-              SET department_id = 1
-              WHERE employee.id = ${empID.name}`, async (err, res) => {
-                    if (err) throw err;
-                    menuOptions();
-                });
-            } else if (res.title === 'Intern Software Developer' || 'Jr Software Developer' || 'Software Engineer' || 'Sr Software Engineer') {
-                connection.query(`UPDATE employee
-              SET department_id = 2
+              SET department_id = ${deptID}
               WHERE employee.id = ${empID.name}`, async (err, res) => {
                     if (err) throw err;
                     menuOptions();
