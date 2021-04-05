@@ -148,7 +148,6 @@ async function addEmployees() {
             } else { department_id = 3 }
 
             let values = {
-                // id: answer.id,
                 first_name: answer.firstname,
                 last_name: answer.lastname,
                 role_id,
