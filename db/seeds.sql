@@ -19,5 +19,5 @@ VALUES ("Joe", "Boss", 1, NULL, 1),
     ("Rachel", "Diaz", 3, 2, 2),
     ("Nathan", "Peek", 4, 2, 2),
     ("James", "Sen", 5, 2, 2),
-    ("Alex", "Tes", 6, 2, 3),
-    ("Ella", "Fitz", 7, 2, 3);
+    ("Alex", "Tes", 7, 2, 3),
+    ("Ella", "Fitz", 8, 2, 3);
