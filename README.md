@@ -34,26 +34,26 @@
 
   ## Preview
 
-  Preview of "View Employees" choice
+  Preview of "View Employees" <br>
   ![emp](./assets/viewemp.png)
 
-  Preview of "View Roles" choice
+  Preview of "View Roles" <br>
   ![role](./assets/viewroles.png)
 
-  Preview of "View Departments" choice <br>
+  Preview of "View Departments" <br>
   ![dept](./assets/viewdept.png)
 
-  Demo video for adding new departments, roles,employees, and updating roles.
+  Demo video for adding new departments, roles, employees, and updating roles.
   ![demo](./assets/demo.gif)
 
   Views after demo video: <br>
-  Employees <br>
+  Employee View <br>
   ![emp](./assets/adviewemp.png)
 
-  Roles <br>
+  Role View <br>
   ![role](./assets/adviewroles.png)
 
-  Departments <br>
+  Department View<br>
   ![dept](./assets/adviewdept.png)
 
   ## Future development
