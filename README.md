@@ -47,10 +47,10 @@
   ![demo](./assets/demo.gif)
 
   Views after demo video: <br>
-  Employees
+  Employees <br>
   ![emp](./assets/adviewemp.png)
 
-  Roles
+  Roles <br>
   ![role](./assets/adviewroles.png)
 
   Departments <br>
